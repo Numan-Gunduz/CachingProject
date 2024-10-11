@@ -1,0 +1,30 @@
+﻿@model Urun
+@{
+    Layout = "_Layout"; // Layout dosyanızı belirtin
+    ViewData["Title"] = "Ürün Sil"; // Sayfa başlığı
+}
+
+<div class="text-center">
+    <h1>Ürünü Sil</h1>
+    <h4>@Model.Isim</h4>
+    <p>Bu ürünü silmek istediğinizden emin misiniz?</p>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <!-- Doğru asp-action kullanımı -->
+        <input type="hidden" asp-for="Id" /> <!-- Doğru parametre adı -->
+        <button type="submit" class="btn btn-danger">Sil</button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary">Geri</a>
+    </form>
+    <p>
+        @if (ViewData["Sure"] != null)
+        {
+            <text>Veri çekme süresi: @ViewData["Sure"] ms</text>
+        }
+        else
+        {
+            <text>Veri çekme süresi bulunamadı.</text>
+        }
+    </p>
+
+</div>
+    
