@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<ApiClient>(); // API istemcisi ekleniyor
 builder.Services.AddMemoryCache(); // Bellek içi önbellek ekleniyor
-
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

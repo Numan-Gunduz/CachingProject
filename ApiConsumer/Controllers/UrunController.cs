@@ -16,23 +16,31 @@ public class UrunController : Controller
     }
 
     // Ürünleri listeleme işlemini 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string searchQuery)
     {
-        Stopwatch stopwatch = new Stopwatch(); // Süreyi başlat
-        stopwatch.Start();
 
-        List<Urun> urunler = null;
+        var start = DateTime.UtcNow;
+
+        List<Urun> urunler = new List<Urun>();
 
         try
         {
-
             urunler = await _apiClient.GetUrunlerAsync();
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                // Arama terimine göre filtreleme
+                urunler = urunler.Where(u => u.Isim.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
             if (urunler == null || urunler.Count == 0)
             {
-                Debug.WriteLine("Ürünler null veya boş döndü.");
                 return View("Error");
             }
+
+            var end = DateTime.UtcNow;
+            var duration = (end - start).TotalMilliseconds;
+            ViewData["Sure"] = duration;
 
             return View(urunler);
         }
@@ -46,13 +54,6 @@ public class UrunController : Controller
             Debug.WriteLine($"Beklenmeyen hata: {ex.Message}");
             return View("Error");
         }
-        stopwatch.Stop();
-        ViewData["Sure"] = stopwatch.ElapsedMilliseconds;
-
-       
-
-
-
     }
 
     // Yeni ürün ekleme formu
