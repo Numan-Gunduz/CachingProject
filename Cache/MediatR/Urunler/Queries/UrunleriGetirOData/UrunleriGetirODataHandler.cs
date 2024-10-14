@@ -13,7 +13,9 @@ namespace Cache.MediatR.Urunler.Queries.UrunleriGetirOData
                  .Select(urun => new UrunleriGetirODataResponse
                  {
                      Id = urun.Id,
-                     Isim = urun.Isim
+                     Isim = urun.Isim,
+                     KategoriId=urun.KategoriId,
+                     
                  }).ToList();
         }
     }

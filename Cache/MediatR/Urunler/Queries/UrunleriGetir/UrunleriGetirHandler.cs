@@ -38,6 +38,7 @@ namespace Cache.MediatR.Urunler.Queries.UrunleriGetir
                 {
                     Id = m.Id,
                     Isim = m.Isim,
+                    
                 }).ToList(); ;
             }
 
@@ -54,6 +55,7 @@ namespace Cache.MediatR.Urunler.Queries.UrunleriGetir
             {
                 Id = m.Id,
                 Isim = m.Isim,
+                
             }).ToList();
         }
     }
