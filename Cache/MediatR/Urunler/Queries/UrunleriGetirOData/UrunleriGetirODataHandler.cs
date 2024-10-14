@@ -1,4 +1,5 @@
-﻿using Cache.Servisler.Caching;
+﻿using Cache.MediatR.Kategoriler;
+using Cache.Servisler.Caching;
 using MediatR;
 
 namespace Cache.MediatR.Urunler.Queries.UrunleriGetirOData
@@ -17,6 +18,8 @@ namespace Cache.MediatR.Urunler.Queries.UrunleriGetirOData
                      KategoriId=urun.KategoriId,
                      
                  }).ToList();
+           
+
         }
     }
 }

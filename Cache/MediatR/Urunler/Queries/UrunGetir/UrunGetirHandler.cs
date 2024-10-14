@@ -1,11 +1,12 @@
 ﻿using Cache.Models;
+using Cache.Servisler.Caching;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Cache.MediatR.Urunler.Queries.UrunGetir
 {
-    public class UrunGetirHandler(Context context, IMemoryCache cache) : IRequestHandler<UrunGetirRequest, UrunGetirResponse>
+    public class UrunGetirHandler(CacheContext context, IMemoryCache cache) : IRequestHandler<UrunGetirRequest, UrunGetirResponse>
     {
         private readonly string _cacheUrunListKey = "urun_list";
 

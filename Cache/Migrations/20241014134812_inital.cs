@@ -4,15 +4,26 @@
 
 //#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-//namespace Cache.Migrations.Cache
+//namespace Cache.Migrations
 //{
 //    /// <inheritdoc />
-//    public partial class InitialCreate : Migration
+//    public partial class inital : Migration
 //    {
 //        /// <inheritdoc />
 //        protected override void Up(MigrationBuilder migrationBuilder)
 //        {
-          
+//            migrationBuilder.CreateTable(
+//                name: "Kategoris",
+//                columns: table => new
+//                {
+//                    Id = table.Column<int>(type: "int", nullable: false)
+//                        .Annotation("SqlServer:Identity", "1, 1"),
+//                    Isim = table.Column<string>(type: "nvarchar(max)", nullable: false)
+//                },
+//                constraints: table =>
+//                {
+//                    table.PrimaryKey("PK_Kategoris", x => x.Id);
+//                });
 
 //            migrationBuilder.CreateTable(
 //                name: "Uruns",

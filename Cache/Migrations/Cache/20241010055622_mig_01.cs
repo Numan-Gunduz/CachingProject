@@ -1,22 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿//using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
+//#nullable disable
 
-namespace Cache.Migrations.Cache
-{
-    /// <inheritdoc />
-    public partial class mig_01 : Migration
-    {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+//namespace Cache.Migrations.Cache
+//{
+//    /// <inheritdoc />
+//    public partial class mig_01 : Migration
+//    {
+//        /// <inheritdoc />
+//        protected override void Up(MigrationBuilder migrationBuilder)
+//        {
 
-        }
+//        }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+//        /// <inheritdoc />
+//        protected override void Down(MigrationBuilder migrationBuilder)
+//        {
 
-        }
-    }
-}
+//        }
+//    }
+//}

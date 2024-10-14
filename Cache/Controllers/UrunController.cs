@@ -6,6 +6,7 @@ using Cache.MediatR.Urunler.Queries.UrunGetir;
 using Cache.MediatR.Urunler.Queries.UrunleriGetir;
 using Cache.MediatR.Urunler.Queries.UrunleriGetirOData;
 using Cache.Models;
+using Cache.Servisler.Caching;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -18,9 +19,9 @@ namespace Cache.Controllers
     public class UrunController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly Context _context;
+        private readonly CacheContext _context;
 
-        public UrunController(IMediator mediator, Context context)
+        public UrunController(IMediator mediator, CacheContext context)
         {
             _mediator = mediator;
             _context = context;

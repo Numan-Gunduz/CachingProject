@@ -1,9 +1,10 @@
 ﻿using Cache.Models;
+using Cache.Servisler.Caching;
 using MediatR;
 
 namespace Cache.MediatR.Urunler.Commands.UrunEkle
 {
-    public class UrunEkleHandler(Context context) : IRequestHandler<UrunEkleRequest>
+    public class UrunEkleHandler(CacheContext context) : IRequestHandler<UrunEkleRequest>
     {
         public async Task Handle(UrunEkleRequest request, CancellationToken cancellationToken)
         {

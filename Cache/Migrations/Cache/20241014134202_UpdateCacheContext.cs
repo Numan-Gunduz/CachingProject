@@ -7,22 +7,27 @@
 //namespace Cache.Migrations.Cache
 //{
 //    /// <inheritdoc />
-//    public partial class InitialCreate : Migration
+//    public partial class UpdateCacheContext : Migration
 //    {
 //        /// <inheritdoc />
 //        protected override void Up(MigrationBuilder migrationBuilder)
 //        {
-          
+//            migrationBuilder.DropTable(
+//                name: "Uruns");
+//        }
 
+//        /// <inheritdoc />
+//        protected override void Down(MigrationBuilder migrationBuilder)
+//        {
 //            migrationBuilder.CreateTable(
 //                name: "Uruns",
 //                columns: table => new
 //                {
 //                    Id = table.Column<int>(type: "int", nullable: false)
 //                        .Annotation("SqlServer:Identity", "1, 1"),
-//                    Isim = table.Column<string>(type: "nvarchar(max)", nullable: false),
 //                    KategoriId = table.Column<int>(type: "int", nullable: false),
-//                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+//                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+//                    Isim = table.Column<string>(type: "nvarchar(max)", nullable: false)
 //                },
 //                constraints: table =>
 //                {
@@ -33,23 +38,6 @@
 //                        principalTable: "Kategoris",
 //                        principalColumn: "Id",
 //                        onDelete: ReferentialAction.Cascade);
-//                });
-
-//            migrationBuilder.InsertData(
-//                table: "Kategoris",
-//                columns: new[] { "Id", "Isim" },
-//                values: new object[,]
-//                {
-//                    { 1, "Kategori-1" },
-//                    { 2, "Kategori-2" },
-//                    { 3, "Kategori-3" },
-//                    { 4, "Kategori-4" },
-//                    { 5, "Kategori-5" },
-//                    { 6, "Kategori-6" },
-//                    { 7, "Kategori-7" },
-//                    { 8, "Kategori-8" },
-//                    { 9, "Kategori-9" },
-//                    { 10, "Kategori-10" }
 //                });
 
 //            migrationBuilder.InsertData(
@@ -73,16 +61,6 @@
 //                name: "IX_Uruns_KategoriId",
 //                table: "Uruns",
 //                column: "KategoriId");
-//        }
-
-//        /// <inheritdoc />
-//        protected override void Down(MigrationBuilder migrationBuilder)
-//        {
-//            migrationBuilder.DropTable(
-//                name: "Uruns");
-
-//            migrationBuilder.DropTable(
-//                name: "Kategoris");
 //        }
 //    }
 //}

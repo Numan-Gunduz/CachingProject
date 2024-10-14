@@ -1,10 +1,11 @@
 ﻿using Cache.Models;
+using Cache.Servisler.Caching;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cache.MediatR.Urunler.Commands.UrunSil
 {
-    public class UrunSilHandler(Context context) : IRequestHandler<UrunSilRequest>
+    public class UrunSilHandler(CacheContext context) : IRequestHandler<UrunSilRequest>
     {
         public async Task Handle(UrunSilRequest request, CancellationToken cancellationToken)
         {

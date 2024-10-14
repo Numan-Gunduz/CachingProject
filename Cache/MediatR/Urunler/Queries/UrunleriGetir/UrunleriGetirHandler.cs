@@ -6,7 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Cache.MediatR.Urunler.Queries.UrunleriGetir
 {
-    public class UrunleriGetirHandler(Context context, CacheContext cacheContext, IMemoryCache cache) : IRequestHandler<UrunleriGetirRequest, IList<UrunleriGetirResponse>?>
+    public class UrunleriGetirHandler(CacheContext context, CacheContext cacheContext, IMemoryCache cache) : IRequestHandler<UrunleriGetirRequest, IList<UrunleriGetirResponse>?>
     {
         private readonly string _cacheUrunListKey = "urun_list";
 

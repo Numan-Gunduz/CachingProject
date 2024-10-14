@@ -1,7 +1,7 @@
 ﻿@model Urun
 @{
-    Layout = "_Layout"; // Layout dosyanızı belirtin
-    ViewData["Title"] = "Ürün Sil"; // Sayfa başlığı
+    Layout = "_Layout"; 
+    ViewData["Title"] = "Ürün Sil"; 
 }
 
 <div class="text-center">
@@ -10,8 +10,8 @@
     <p>Bu ürünü silmek istediğinizden emin misiniz?</p>
 
     <form asp-action="DeleteConfirmed" method="post">
-        <!-- Doğru asp-action kullanımı -->
-        <input type="hidden" asp-for="Id" /> <!-- Doğru parametre adı -->
+      
+        <input type="hidden" asp-for="Id" /> 
         <button type="submit" class="btn btn-danger">Sil</button>
         <a href="@Url.Action("Index")" class="btn btn-secondary">Geri</a>
     </form>

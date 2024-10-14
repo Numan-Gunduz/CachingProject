@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFrameworkCore.Triggered" Version="3.0.0" />
+    <PackageReference Include="EntityFrameworkCore.Triggered.AspNetCore" Version="1.0.0" />
+    <PackageReference Include="EntityFrameworkCore.Triggered.Extensions" Version="3.0.0" />
+    <PackageReference Include="EntityFrameworkCore.Triggers" Version="1.2.3" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
   </ItemGroup>
 
