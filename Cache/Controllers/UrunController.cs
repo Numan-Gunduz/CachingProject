@@ -100,18 +100,18 @@ namespace Cache.Controllers
         [HttpDelete]
         public async Task<IActionResult> UrunSil([FromQuery] UrunSilRequest request, CancellationToken cancellationToken)
         {
-            if (request.UrunId <= 0) // Geçersiz ID kontrolü
+            if (request.UrunId <= 0) 
             {
                 return BadRequest("Geçersiz ürün ID'si.");
             }
             _context.ClearCacheForTable("Uruns");
 
-            // Silme sonrası güncel ürün listesini al ve cache'e ekle
-            var silinenUrunler = _context.GetUrunler(1, 200); // Tüm ürünleri al
-            _cache.Set("Urunler_1_200", silinenUrunler); // Cache'e güncel ürün listesi ekleniyor
+           
+            var silinenUrunler = _context.GetUrunler(1, 200); 
+            _cache.Set("Urunler_1_200", silinenUrunler); 
 
             await _mediator.Send(request, cancellationToken);
-            return NoContent(); // 204 No Content
+            return NoContent(); 
         }
 
     }

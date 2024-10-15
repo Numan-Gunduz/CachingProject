@@ -27,6 +27,6 @@ app.UseAuthorization();
 // Default route ayarý
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Urun}/{action=Index}/{id?}");
 
 app.Run();
