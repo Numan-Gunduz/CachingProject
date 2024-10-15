@@ -4,13 +4,11 @@ using Cache.MediatR.Urunler.Commands.UrunGuncelle;
 using Cache.MediatR.Urunler.Commands.UrunSil;
 using Cache.MediatR.Urunler.Queries.UrunGetir;
 using Cache.MediatR.Urunler.Queries.UrunleriGetir;
-using Cache.MediatR.Urunler.Queries.UrunleriGetirOData;
-using Cache.Models;
 using Cache.Servisler.Caching;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Cache.Controllers
 {
@@ -20,32 +18,23 @@ namespace Cache.Controllers
     {
         private readonly IMediator _mediator;
         private readonly CacheContext _context;
+        private readonly IMemoryCache _cache; 
 
-        public UrunController(IMediator mediator, CacheContext context)
+        public UrunController(IMediator mediator, CacheContext context, IMemoryCache cache)
         {
             _mediator = mediator;
             _context = context;
+            _cache = cache; 
         }
 
         [HttpGet]
         [EnableQuery]
         public async Task<IActionResult> UrunleriGetirOData(CancellationToken cancellationToken, [FromHeader] int sayfaNumarasi = 1, [FromHeader] int sayfaBuyuklugu = 200)
         {
-            // Sadece veri tabanında ürün yoksa veri ekleme işlemi yapılacak bu kontrolü yapmamun sebebi veri tabanına sürekli olarak veri pushlamasını engelleyerek sadece veri yoksa veri göndermesini sağlamaktı
-            if (!await _context.Uruns.AnyAsync(cancellationToken))
-            {
-                await _context.Uruns.AddRangeAsync(new List<Urun>
-        {
-            new Urun { IsActive = true, Isim = "DenemeTrue", KategoriId = 3 },
-            new Urun { IsActive = false, Isim = "DenemeFalse", KategoriId = 3 }
-        });
 
-                await _context.SaveChangesAsync(cancellationToken);
+            var urunler = _context.GetUrunler(sayfaNumarasi, sayfaBuyuklugu);
+            return Ok(urunler);
             }
-
-            var response = await _mediator.Send(new UrunleriGetirODataRequest { SayfaNumarasi = sayfaNumarasi, SayfaBuyuklugu = sayfaBuyuklugu }, cancellationToken);
-            return Ok(response);
-        }
 
 
         [HttpGet]
@@ -59,10 +48,6 @@ namespace Cache.Controllers
         public async Task<IActionResult> UrunGetir([FromQuery] int urunId, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(new UrunGetirRequest { UrunId = urunId }, cancellationToken);
-            if (response == null)
-            {
-                return NotFound(); // 404 Not Found
-            }
             return Ok(response);
         }
 
@@ -70,7 +55,10 @@ namespace Cache.Controllers
         public async Task<IActionResult> UrunEkle([FromBody] UrunEkleRequest request, CancellationToken cancellationToken)
         {
             await _mediator.Send(request, cancellationToken);
-            return CreatedAtAction(nameof(UrunGetir), new { urunId = request.UrunIsim }, request); // İsim ile döndürün ya da uygun bir değeri kullanın
+            _context.ClearCacheForTable("Uruns");
+            var urunler = _context.GetUrunler(1, 200);
+            _cache.Set("Urunler_1_200", urunler);
+            return CreatedAtAction(nameof(UrunGetir), new { urunId = request.UrunIsim }, request); 
         }
 
         [HttpPut]
@@ -98,6 +86,12 @@ namespace Cache.Controllers
             }
 
             await _mediator.Send(request, cancellationToken);
+            // Cache'i temizle
+            _context.ClearCacheForTable("Uruns");
+
+            // Güncel ürün listesini al ve cache'e ekle
+            var guncellenenUrunler = _context.GetUrunler(1, 200); // Tüm ürünleri al
+            _cache.Set("Urunler_1_200", guncellenenUrunler); // Cache'e güncel ürün listesi eklenmesini sağladom.
             return NoContent();
         }
 
@@ -110,6 +104,11 @@ namespace Cache.Controllers
             {
                 return BadRequest("Geçersiz ürün ID'si.");
             }
+            _context.ClearCacheForTable("Uruns");
+
+            // Silme sonrası güncel ürün listesini al ve cache'e ekle
+            var silinenUrunler = _context.GetUrunler(1, 200); // Tüm ürünleri al
+            _cache.Set("Urunler_1_200", silinenUrunler); // Cache'e güncel ürün listesi ekleniyor
 
             await _mediator.Send(request, cancellationToken);
             return NoContent(); // 204 No Content

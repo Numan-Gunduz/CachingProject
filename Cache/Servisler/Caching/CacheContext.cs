@@ -1,67 +1,12 @@
-﻿//using Cache.Models;
-//using Microsoft.EntityFrameworkCore;
-//using Microsoft.EntityFrameworkCore.Metadata;
-//using Microsoft.Extensions.Caching.Memory;
-//using System.Collections;
-//using System.Linq.Expressions;
-
-//namespace Cache.Servisler.Caching
-//{
-//    public class CacheContext : Context
-//    {
-//        private readonly IMemoryCache _cache;
-
-//        public CacheContext(DbContextOptions<CacheContext> options, IMemoryCache cache) : base(options)
-//        {
-//            _cache = cache;
-//        }
-
-//        public override DbSet<Kategori> Kategoris
-//        {
-//            get
-//            {
-//                return new CachedDbSet<Kategori>(base.Kategoris, _cache, this);
-//            }
-//            set
-//            {
-//                base.Kategoris = value;
-//            }
-//        }
-
-//        public override DbSet<Urun> Uruns
-//        {
-//            get
-//            {
-//                return new CachedDbSet<Urun>(base.Uruns, _cache, this);
-//            }
-//            set
-//            {
-//                base.Uruns = value;
-//            }
-//        }
-
-//        // DisposeAsync method implementation
-//        public override async ValueTask DisposeAsync()
-//        {
-//            await base.DisposeAsync();
-//        }
-
-//        public override void Dispose()
-//        {
-//            base.Dispose();
-//        }
-//    }
-
-//}
+﻿
 using Cache.Models;
-using EntityFrameworkCore.Triggered; // Triggered paketi
 using EntityFrameworkCore.Triggers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Cache.Servisler.Caching
 {
-    public class CacheContext : DbContextWithTriggers // DbContextWithTriggers kullanarak tetikleyici işlevselliğini etkinleştiriyoruz
+    public class CacheContext : DbContextWithTriggers 
     {
         private readonly IMemoryCache _cache;
 
@@ -78,54 +23,49 @@ namespace Cache.Servisler.Caching
             base.OnModelCreating(modelBuilder);
 
             // Kategori tetikleyici tanımlamaları
-            Triggers<Kategori>.Inserting += entry =>
-            {
-                ClearCacheForTable("Kategoris");
-            };
-
-            Triggers<Kategori>.Updating += entry =>
-            {
-                ClearCacheForTable("Kategoris");
-            };
-
-            Triggers<Kategori>.Deleting += entry =>
-            {
-                ClearCacheForTable("Kategoris");
-            };
+            Triggers<Kategori>.Inserting += entry => ClearCacheForTable("Kategoris");
+            Triggers<Kategori>.Updating += entry => ClearCacheForTable("Kategoris");
+            Triggers<Kategori>.Deleting += entry => ClearCacheForTable("Kategoris");
 
             // Urun tetikleyici tanımlamaları
-            Triggers<Urun>.Inserting += entry =>
-            {
-                ClearCacheForTable("Uruns");
-            };
-
-            Triggers<Urun>.Updating += entry =>
-            {
-                ClearCacheForTable("Uruns");
-            };
-
-            Triggers<Urun>.Deleting += entry =>
-            {
-                ClearCacheForTable("Uruns");
-            };
-
-            // Model yaratımı
-            //modelBuilder.Entity<Urun>(entity =>
-            //{
-            //    entity.ToView("ActiveUruns"); // Görünümün adı
-            //    entity.HasOne(a => a.Kategori)
-            //          .WithMany(d => d.Uruns)
-            //          .HasForeignKey(a => a.KategoriId)
-            //          .OnDelete(DeleteBehavior.Cascade);
-            //});
+            Triggers<Urun>.Inserting += entry => ClearCacheForTable("Uruns");
+            Triggers<Urun>.Updating += entry => ClearCacheForTable("Uruns");
+            Triggers<Urun>.Deleting += entry => ClearCacheForTable("Uruns");
 
             modelBuilder.Entity<Kategori>().HasData(GenerateKategoriData());
             modelBuilder.Entity<Urun>().HasData(GenerateUrunData());
         }
 
-        private void ClearCacheForTable(string tableName)
+        public void ClearCacheForTable(string tableName)
         {
-            _cache.Remove(tableName); // İlgili tablo için cache'i temizliyoruz
+            Console.WriteLine($"Cache temizleniyor: {tableName}");
+            _cache.Remove(tableName); // İlgili tablo için cache'i temizlemek için yazdım
+            _cache.Remove("Urunler_1_200");
+        }
+        public List<Urun> GetUrunler(int sayfaNumarasi, int sayfaBuyuklugu)
+        {
+            var cacheKey = $"Urunler_{sayfaNumarasi}_{sayfaBuyuklugu}";
+
+            return GetCachedData(cacheKey, () =>
+            {
+                // Veritabanından veri al
+                return Uruns.Skip((sayfaNumarasi - 1) * sayfaBuyuklugu)
+                            .Take(sayfaBuyuklugu)
+                            .ToList();
+            });
+        }
+        private T GetCachedData<T>(string cacheKey, Func<T> retrieveData)
+        {
+            if (_cache.TryGetValue(cacheKey, out T cachedData))
+            {
+                Console.WriteLine($"Cache'den veri Alındı: {cacheKey}");
+                return cachedData;
+            }
+
+            Console.WriteLine($"Cache'den veri alınamadı, veritabanından getiriliyor: {cacheKey}");
+            var data = retrieveData();
+            _cache.Set(cacheKey, data);
+            return data;
         }
 
         private List<Kategori> GenerateKategoriData()

@@ -9,10 +9,8 @@ public class Urun
 
     public int KategoriId { get; set; }
 
-
     //public Kategori? Kategori { get; set; }
 
-  
     public bool? IsActive { get; set; }
 
 

@@ -15,22 +15,5 @@ namespace Cache.Controllers
             _memoryCache = memoryCache;
         }
 
-        [HttpPut]
-        public async Task<IActionResult> ResetCache(string tableName)
-        {
-            if (string.IsNullOrWhiteSpace(tableName))
-            {
-                return BadRequest("Tablo boş değil.");
-            }
-
-            await Task.Run(() => _memoryCache.Remove(tableName));
-
- 
-       
-            Console.WriteLine("Cache Temizlendi. Tablo Adı: " + tableName);
-        
-
-            return Ok("Cache reset successfully for table: " + tableName);
-        }
     }
 }

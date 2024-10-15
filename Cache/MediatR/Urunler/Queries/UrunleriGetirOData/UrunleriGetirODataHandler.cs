@@ -1,6 +1,8 @@
 ﻿using Cache.MediatR.Kategoriler;
 using Cache.Servisler.Caching;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Cache.MediatR.Urunler.Queries.UrunleriGetirOData
 {
@@ -15,10 +17,10 @@ namespace Cache.MediatR.Urunler.Queries.UrunleriGetirOData
                  {
                      Id = urun.Id,
                      Isim = urun.Isim,
-                     KategoriId=urun.KategoriId,
-                     
+                     KategoriId = urun.KategoriId,
+
                  }).ToList();
-           
+
 
         }
     }
