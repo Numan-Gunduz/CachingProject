@@ -17,6 +17,7 @@ namespace Cache.Servisler.Caching
 
         public DbSet<Kategori> Kategoris { get; set; }
         public DbSet<Urun> Uruns { get; set; }
+        public object AbsoluteExpirationRelativeNow { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,9 +65,20 @@ namespace Cache.Servisler.Caching
 
             Console.WriteLine($"Cache'den veri alınamadı, veritabanından getiriliyor: {cacheKey}");
             var data = retrieveData();
-            _cache.Set(cacheKey, data);
+
+            // Cache'e eklerken süre sınırını ayarla (örneğin 30 dakika)
+            //_cache.Set(cacheKey, data, new MemoryCacheEntryOptions
+            //{
+            //    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30)
+            //}); ;
+       _cache.Set(cacheKey, data, new MemoryCacheEntryOptions
+       {
+                AbsoluteExpirationRelativeToNow=TimeSpan.FromMinutes(1)
+
+            });
+
             return data;
-        }
+        }   
 
         private List<Kategori> GenerateKategoriData()
         {

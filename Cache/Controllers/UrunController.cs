@@ -55,9 +55,9 @@ namespace Cache.Controllers
         public async Task<IActionResult> UrunEkle([FromBody] UrunEkleRequest request, CancellationToken cancellationToken)
         {
             await _mediator.Send(request, cancellationToken);
-            _context.ClearCacheForTable("Uruns");
-            var urunler = _context.GetUrunler(1, 200);
-            _cache.Set("Urunler_1_200", urunler);
+            _context.ClearCacheForTable("Uruns");//ürün ekleme işlem başarılı olduğunda cache temizlemeye yarıyor 
+            var urunler = _context.GetUrunler(1, 200);//ürünler çekildi
+            _cache.Set("Urunler_1_200", urunler);//çekilden ürünler eklendi
             return CreatedAtAction(nameof(UrunGetir), new { urunId = request.UrunIsim }, request); 
         }
 
